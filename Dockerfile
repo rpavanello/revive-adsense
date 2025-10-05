@@ -1,6 +1,6 @@
 FROM php:8.2-apache
 
-# Pacotes necessários para compilar as extensões do PHP (inclui libcurl e pkg-config)
+# Pacotes necessários para compilar extensões do PHP
 RUN apt-get update && apt-get install -y \
     libpng-dev \
     libjpeg-dev \
@@ -9,6 +9,7 @@ RUN apt-get update && apt-get install -y \
     libxml2-dev \
     libicu-dev \
     libcurl4-openssl-dev \
+    libonig-dev \
     pkg-config \
     unzip \
     curl \
