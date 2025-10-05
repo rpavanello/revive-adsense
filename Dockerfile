@@ -19,15 +19,15 @@ RUN apt-get update && apt-get install -y \
 
 WORKDIR /var/www/html
 
-# Use sempre o artefato oficial do GitHub Releases
+# Versão do Revive e URL da tag (sempre disponível)
 ARG REVIVE_VERSION=5.4.1
-ARG REVIVE_URL=https://github.com/revive-adserver/revive-adserver/releases/download/v${REVIVE_VERSION}/revive-adserver-${REVIVE_VERSION}.zip
+ARG REVIVE_URL=https://github.com/revive-adserver/revive-adserver/archive/refs/tags/v${REVIVE_VERSION}.zip
 
-# -f: fail on HTTP errors; -S: show errors; -L: follow redirects
+# -f: falha em HTTP != 200 ; -S: mostra erros ; -L: segue redirects
 RUN curl -fSL "$REVIVE_URL" -o revive.zip \
  && unzip -q revive.zip \
- && mv revive-adserver/* . \
- && rm -rf revive.zip revive-adserver
+ && mv revive-adserver-${REVIVE_VERSION}/* . \
+ && rm -rf revive.zip revive-adserver-${REVIVE_VERSION}
 
 RUN chown -R www-data:www-data /var/www/html
 
