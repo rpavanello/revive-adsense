@@ -1,6 +1,6 @@
 FROM php:8.2-apache
 
-# Pacotes necessários para compilar extensões do PHP
+# Dependências para compilar extensões do PHP
 RUN apt-get update && apt-get install -y \
     libpng-dev \
     libjpeg-dev \
@@ -19,9 +19,13 @@ RUN apt-get update && apt-get install -y \
 
 WORKDIR /var/www/html
 
+# Use sempre o artefato oficial do GitHub Releases
 ARG REVIVE_VERSION=5.4.1
-RUN curl -L -o revive.zip https://download.revive-adserver.com/revive-adserver-${REVIVE_VERSION}.zip \
- && unzip revive.zip \
+ARG REVIVE_URL=https://github.com/revive-adserver/revive-adserver/releases/download/v${REVIVE_VERSION}/revive-adserver-${REVIVE_VERSION}.zip
+
+# -f: fail on HTTP errors; -S: show errors; -L: follow redirects
+RUN curl -fSL "$REVIVE_URL" -o revive.zip \
+ && unzip -q revive.zip \
  && mv revive-adserver/* . \
  && rm -rf revive.zip revive-adserver
 
