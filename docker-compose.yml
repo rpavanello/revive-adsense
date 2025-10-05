@@ -1,0 +1,52 @@
+version: "3.9"
+
+services:
+  db:
+    image: mariadb:10.6
+    environment:
+      MYSQL_DATABASE: ${DB_NAME}
+      MYSQL_USER: ${DB_USER}
+      MYSQL_PASSWORD: ${DB_PASSWORD}
+      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
+    volumes:
+      - db_data:/var/lib/mysql
+    restart: unless-stopped
+
+  revive:
+    build: .
+    depends_on:
+      - db
+    environment:
+      # Used by the installer screen
+      REVIVE_DB_HOST: db
+      REVIVE_DB_NAME: ${DB_NAME}
+      REVIVE_DB_USER: ${DB_USER}
+      REVIVE_DB_PASS: ${DB_PASSWORD}
+    # In Easypanel you will attach a domain to this service on internal port 80.
+    # For local testing uncomment the line below:
+    # ports:
+    #   - "8080:80"
+    volumes:
+      - revive_data:/var/www/html/var
+      - revive_plugins:/var/www/html/plugins
+      - revive_uploads:/var/www/html/www/images
+    restart: unless-stopped
+
+  phpmyadmin:
+    image: phpmyadmin:5-apache
+    environment:
+      PMA_HOST: db
+      PMA_USER: ${DB_USER}
+      PMA_PASSWORD: ${DB_PASSWORD}
+    # For local testing uncomment below:
+    # ports:
+    #   - "8081:80"
+    depends_on:
+      - db
+    restart: unless-stopped
+
+volumes:
+  db_data:
+  revive_data:
+  revive_plugins:
+  revive_uploads:
