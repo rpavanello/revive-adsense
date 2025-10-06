@@ -27,9 +27,17 @@ RUN printf "ServerName localhost\n\
 </IfModule>\n" > /etc/apache2/conf-available/proxy-https.conf \
  && a2enconf proxy-https
 
+# Instala PEAR e bibliotecas necessárias
+RUN curl -O https://pear.php.net/go-pear.phar \
+ && php go-pear.phar \
+ && rm go-pear.phar \
+ && pear channel-update pear.php.net \
+ && pear install HTML_Common-1.2.5 \
+ && pear install HTML_QuickForm-3.2.16
+
 WORKDIR /var/www/html
 
-# Baixa o pacote de release oficial (já contém vendor e PEAR)
+# Baixa o pacote de release oficial
 ARG REVIVE_VERSION=5.4.1
 ARG REVIVE_URL=https://download.revive-adserver.com/revive-adserver-${REVIVE_VERSION}.zip
 
