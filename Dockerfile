@@ -19,7 +19,7 @@ RUN apt-get update && apt-get install -y \
  && a2enmod rewrite headers expires setenvif \
  && rm -rf /var/lib/apt/lists/*
 
-# Configuração para proxy HTTPS - ADICIONAR AQUI
+# Configuração para proxy HTTPS
 RUN printf "ServerName localhost\n\
 <IfModule mod_setenvif.c>\n\
     SetEnvIf X-Forwarded-Proto https HTTPS=on\n\
@@ -44,6 +44,17 @@ RUN curl -fSL "$REVIVE_URL" -o revive.zip \
 # Instala as dependências PHP do projeto (gera lib/vendor)
 ENV COMPOSER_ALLOW_SUPERUSER=1
 RUN composer install --no-dev --no-interaction --prefer-dist --no-progress
+
+# ADICIONAR AQUI - Força detecção de HTTPS para proxy reverso
+RUN echo "<?php" > /var/www/html/init.php \
+ && echo "if (isset(\$_SERVER['HTTP_X_FORWARDED_PROTO']) && \$_SERVER['HTTP_X_FORWARDED_PROTO'] === 'https') {" >> /var/www/html/init.php \
+ && echo "    \$_SERVER['HTTPS'] = 'on';" >> /var/www/html/init.php \
+ && echo "    \$_SERVER['SERVER_PORT'] = 443;" >> /var/www/html/init.php \
+ && echo "}" >> /var/www/html/init.php \
+ && echo "?>" >> /var/www/html/init.php
+
+# Configura PHP para carregar init.php antes de qualquer script
+RUN echo "auto_prepend_file = /var/www/html/init.php" >> /usr/local/etc/php/conf.d/revive.ini
 
 # Permissões
 RUN chown -R www-data:www-data /var/www/html
