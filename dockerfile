@@ -39,6 +39,9 @@ RUN mkdir -p /var/www/html/lib/OX \
 RUN mkdir -p /var/www/html/lib/pear/Zend \
  && echo "<?php\nclass Zend_Translate {}\n?>" > /var/www/html/lib/pear/Zend/Translate.php
 
+RUN mkdir -p /var/www/html/lib/max/other \
+ && echo "<?php\nclass MAX_Plugin_Common {}\n?>" > /var/www/html/lib/max/other/lib-acl.inc.php
+
 # Força detecção HTTPS, configura include_path e define constantes
 RUN echo "<?php\nini_set('include_path', '.:/var/www/html/lib/pear');\nif (isset(\$_SERVER['HTTP_X_FORWARDED_PROTO']) && \$_SERVER['HTTP_X_FORWARDED_PROTO'] === 'https') {\n    \$_SERVER['HTTPS'] = 'on'; \$_SERVER['SERVER_PORT'] = 443;\n}\ndefine('MAX_PATH', __DIR__);\ndefine('LIB_PATH', MAX_PATH . '/lib');\ndefine('RV_PATH', MAX_PATH);\ndefine('OX_PATH', MAX_PATH);" > init.php
 
