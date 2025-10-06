@@ -26,13 +26,13 @@ RUN curl -sS https://pear.php.net/go-pear.phar -o go-pear.phar \
 
 WORKDIR /var/www/html
 
-# Download do pacote oficial
-RUN curl -fSL -A "Mozilla/5.0" https://download.revive-adserver.com/revive-adserver-5.5.2.tar.gz -o revive.tar.gz \
- && tar -xzf revive.tar.gz \
+# Download do Dropbox
+RUN curl -L -o revive-adserver-5.5.2.tar.gz "https://www.dropbox.com/scl/fi/l6khvi9qs16eh1icfkrkh/revive-adserver-5.5.2.tar.gz?rlkey=1bwvyo4gpx6abi1pls2yxj26e&dl=1" \
+ && tar -xzf revive-adserver-5.5.2.tar.gz \
  && mv revive-adserver-5.5.2/* . \
- && rm -rf revive.tar.gz revive-adserver-5.5.2
+ && rm -rf revive-adserver-5.5.2.tar.gz revive-adserver-5.5.2
 
-# Cria o arquivo PluginManager.php que está faltando no pacote
+# Cria o arquivo PluginManager.php que está faltando
 RUN mkdir -p /var/www/html/lib/Plugin \
  && echo "<?php\nclass PluginManager {}\n?>" > /var/www/html/lib/Plugin/PluginManager.php
 
