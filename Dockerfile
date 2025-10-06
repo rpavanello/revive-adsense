@@ -16,8 +16,16 @@ RUN apt-get update && apt-get install -y \
     curl \
  && docker-php-ext-configure gd --with-freetype --with-jpeg \
  && docker-php-ext-install -j$(nproc) gd mysqli curl mbstring xml zip intl \
- && a2enmod rewrite headers expires \
+ && a2enmod rewrite headers expires setenvif \
  && rm -rf /var/lib/apt/lists/*
+
+# Configuração para proxy HTTPS - ADICIONAR AQUI
+RUN printf "ServerName localhost\n\
+<IfModule mod_setenvif.c>\n\
+    SetEnvIf X-Forwarded-Proto https HTTPS=on\n\
+    SetEnvIf X-Forwarded-Proto https HTTPS=1\n\
+</IfModule>\n" > /etc/apache2/conf-available/proxy-https.conf \
+ && a2enconf proxy-https
 
 # Composer (oficial)
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
