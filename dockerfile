@@ -33,11 +33,8 @@ RUN mkdir -p /var/www/html/lib/Plugin \
 RUN mkdir -p /var/www/html/lib/Admin \
  && echo "<?php\nclass OA_Admin_Redirect {}\n?>" > /var/www/html/lib/Admin/Redirect.php
 
-# Adiciona o caminho PEAR do Revive ao include_path do PHP
-RUN echo "include_path = \".:/usr/local/lib/php:/var/www/html/lib/pear\"" >> /usr/local/etc/php/conf.d/revive.ini
-
-# Força detecção HTTPS e define constantes
-RUN echo "<?php\nif (isset(\$_SERVER['HTTP_X_FORWARDED_PROTO']) && \$_SERVER['HTTP_X_FORWARDED_PROTO'] === 'https') {\n    \$_SERVER['HTTPS'] = 'on'; \$_SERVER['SERVER_PORT'] = 443;\n}\ndefine('MAX_PATH', __DIR__);\ndefine('LIB_PATH', MAX_PATH . '/lib');\ndefine('RV_PATH', MAX_PATH);\ndefine('OX_PATH', MAX_PATH);" > init.php
+# Força detecção HTTPS, configura include_path e define constantes
+RUN echo "<?php\nini_set('include_path', '.:/var/www/html/lib/pear');\nif (isset(\$_SERVER['HTTP_X_FORWARDED_PROTO']) && \$_SERVER['HTTP_X_FORWARDED_PROTO'] === 'https') {\n    \$_SERVER['HTTPS'] = 'on'; \$_SERVER['SERVER_PORT'] = 443;\n}\ndefine('MAX_PATH', __DIR__);\ndefine('LIB_PATH', MAX_PATH . '/lib');\ndefine('RV_PATH', MAX_PATH);\ndefine('OX_PATH', MAX_PATH);" > init.php
 
 RUN echo "auto_prepend_file = /var/www/html/init.php" >> /usr/local/etc/php/conf.d/revive.ini
 
