@@ -27,6 +27,14 @@ RUN printf "ServerName localhost\n\
 </IfModule>\n" > /etc/apache2/conf-available/proxy-https.conf \
  && a2enconf proxy-https
 
+# Instala PEAR e bibliotecas HTML necessárias
+RUN curl -sS https://pear.php.net/go-pear.phar -o go-pear.phar \
+ && php go-pear.phar <<EOF \n\n\n\n\n\n\n\n\n\n\nEOF \
+ && rm go-pear.phar \
+ && pear channel-update pear.php.net \
+ && pear install --alldeps HTML_Common \
+ && pear install --alldeps HTML_QuickForm
+
 WORKDIR /var/www/html
 
 # Baixa o pacote de release oficial - versão 5.5.2
