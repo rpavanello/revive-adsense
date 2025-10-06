@@ -27,24 +27,16 @@ RUN printf "ServerName localhost\n\
 </IfModule>\n" > /etc/apache2/conf-available/proxy-https.conf \
  && a2enconf proxy-https
 
-# Instala PEAR e bibliotecas necessárias
-RUN curl -O https://pear.php.net/go-pear.phar \
- && php go-pear.phar \
- && rm go-pear.phar \
- && pear channel-update pear.php.net \
- && pear install HTML_Common-1.2.5 \
- && pear install HTML_QuickForm-3.2.16
-
 WORKDIR /var/www/html
 
-# Baixa o pacote de release oficial
-ARG REVIVE_VERSION=5.4.1
-ARG REVIVE_URL=https://download.revive-adserver.com/revive-adserver-${REVIVE_VERSION}.zip
+# Baixa o pacote de release oficial - versão 5.5.2 (mais recente e estável)
+ARG REVIVE_VERSION=5.5.2
+ARG REVIVE_URL=https://download.revive-adserver.com/revive-adserver-${REVIVE_VERSION}.tar.gz
 
-RUN curl -fSL -A "Mozilla/5.0" "$REVIVE_URL" -o revive.zip \
- && unzip -q revive.zip \
+RUN curl -fSL -A "Mozilla/5.0" "$REVIVE_URL" -o revive.tar.gz \
+ && tar -xzf revive.tar.gz \
  && mv revive-adserver-${REVIVE_VERSION}/* . \
- && rm -rf revive.zip revive-adserver-${REVIVE_VERSION}
+ && rm -rf revive.tar.gz revive-adserver-${REVIVE_VERSION}
 
 # Força detecção de HTTPS e define constantes necessárias
 RUN echo "<?php" > /var/www/html/init.php \
@@ -52,10 +44,6 @@ RUN echo "<?php" > /var/www/html/init.php \
  && echo "    \$_SERVER['HTTPS'] = 'on';" >> /var/www/html/init.php \
  && echo "    \$_SERVER['SERVER_PORT'] = 443;" >> /var/www/html/init.php \
  && echo "}" >> /var/www/html/init.php \
- && echo "define('MAX_PATH', dirname(__FILE__));" >> /var/www/html/init.php \
- && echo "define('LIB_PATH', MAX_PATH . '/lib');" >> /var/www/html/init.php \
- && echo "define('RV_PATH', MAX_PATH);" >> /var/www/html/init.php \
- && echo "define('OX_PATH', MAX_PATH);" >> /var/www/html/init.php \
  && echo "?>" >> /var/www/html/init.php
 
 # Configura PHP para carregar init.php antes de qualquer script
