@@ -33,7 +33,7 @@ WORKDIR /var/www/html
 ARG REVIVE_VERSION=5.4.1
 ARG REVIVE_URL=https://download.revive-adserver.com/revive-adserver-${REVIVE_VERSION}.zip
 
-RUN curl -fSL "$REVIVE_URL" -o revive.zip \
+RUN curl -fSL -A "Mozilla/5.0" "$REVIVE_URL" -o revive.zip \
  && unzip -q revive.zip \
  && mv revive-adserver-${REVIVE_VERSION}/* . \
  && rm -rf revive.zip revive-adserver-${REVIVE_VERSION}
