@@ -24,6 +24,11 @@ services:
       - revive_plugins:/var/www/html/plugins
       - revive_uploads:/var/www/html/www/images
     restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost/"]
+      interval: 15s
+      timeout: 5s
+      retries: 10
 
   phpmyadmin:
     image: phpmyadmin:5-apache
@@ -40,11 +45,3 @@ volumes:
   revive_data:
   revive_plugins:
   revive_uploads:
-
-revive:
-  # ... (resto da sua config)
-  healthcheck:
-    test: ["CMD", "curl", "-f", "http://localhost/"]
-    interval: 15s
-    timeout: 5s
-    retries: 10
