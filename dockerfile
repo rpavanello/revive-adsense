@@ -32,9 +32,12 @@ RUN curl -L -o revive-adserver-5.5.2.tar.gz "https://www.dropbox.com/scl/fi/l6kh
  && mv revive-adserver-5.5.2/* . \
  && rm -rf revive-adserver-5.5.2.tar.gz revive-adserver-5.5.2
 
-# Cria o arquivo PluginManager.php que está faltando
+# Cria os arquivos que estão faltando no pacote
 RUN mkdir -p /var/www/html/lib/Plugin \
  && echo "<?php\nclass PluginManager {}\n?>" > /var/www/html/lib/Plugin/PluginManager.php
+
+RUN mkdir -p /var/www/html/lib/Admin \
+ && echo "<?php\nclass OA_Admin_Redirect {}\n?>" > /var/www/html/lib/Admin/Redirect.php
 
 # Força detecção HTTPS e define constantes
 RUN echo "<?php\nif (isset(\$_SERVER['HTTP_X_FORWARDED_PROTO']) && \$_SERVER['HTTP_X_FORWARDED_PROTO'] === 'https') {\n    \$_SERVER['HTTPS'] = 'on'; \$_SERVER['SERVER_PORT'] = 443;\n}\ndefine('MAX_PATH', __DIR__);\ndefine('LIB_PATH', MAX_PATH . '/lib');\ndefine('RV_PATH', MAX_PATH);\ndefine('OX_PATH', MAX_PATH);" > init.php
