@@ -40,3 +40,11 @@ volumes:
   revive_data:
   revive_plugins:
   revive_uploads:
+
+revive:
+  # ... (resto da sua config)
+  healthcheck:
+    test: ["CMD", "curl", "-f", "http://localhost/"]
+    interval: 15s
+    timeout: 5s
+    retries: 10
