@@ -45,12 +45,13 @@ RUN curl -fSL "$REVIVE_URL" -o revive.zip \
 ENV COMPOSER_ALLOW_SUPERUSER=1
 RUN composer install --no-dev --no-interaction --prefer-dist --no-progress
 
-# ADICIONAR AQUI - Força detecção de HTTPS para proxy reverso
+# Força detecção de HTTPS e define constantes necessárias
 RUN echo "<?php" > /var/www/html/init.php \
  && echo "if (isset(\$_SERVER['HTTP_X_FORWARDED_PROTO']) && \$_SERVER['HTTP_X_FORWARDED_PROTO'] === 'https') {" >> /var/www/html/init.php \
  && echo "    \$_SERVER['HTTPS'] = 'on';" >> /var/www/html/init.php \
  && echo "    \$_SERVER['SERVER_PORT'] = 443;" >> /var/www/html/init.php \
  && echo "}" >> /var/www/html/init.php \
+ && echo "define('MAX_PATH', dirname(__FILE__));" >> /var/www/html/init.php \
  && echo "?>" >> /var/www/html/init.php
 
 # Configura PHP para carregar init.php antes de qualquer script
