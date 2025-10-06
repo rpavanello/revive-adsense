@@ -18,12 +18,6 @@ RUN printf "ServerName localhost\n\
 </IfModule>\n" > /etc/apache2/conf-available/proxy-https.conf \
  && a2enconf proxy-https
 
-# Instala PEAR e bibliotecas HTML
-RUN curl -sS https://pear.php.net/go-pear.phar -o go-pear.phar \
- && php go-pear.phar -d php_dir=/usr/local/lib/php \
- && rm go-pear.phar \
- && pear install --alldeps HTML_Common HTML_QuickForm
-
 WORKDIR /var/www/html
 
 # Download do Dropbox
