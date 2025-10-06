@@ -27,23 +27,16 @@ RUN printf "ServerName localhost\n\
 </IfModule>\n" > /etc/apache2/conf-available/proxy-https.conf \
  && a2enconf proxy-https
 
-# Composer (oficial)
-RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
-
 WORKDIR /var/www/html
 
-# Baixa o código da tag (não contém vendor)
+# Baixa o pacote de release oficial (já contém vendor e PEAR)
 ARG REVIVE_VERSION=5.4.1
-ARG REVIVE_URL=https://github.com/revive-adserver/revive-adserver/archive/refs/tags/v${REVIVE_VERSION}.zip
+ARG REVIVE_URL=https://github.com/revive-adserver/revive-adserver/releases/download/v${REVIVE_VERSION}/revive-adserver-${REVIVE_VERSION}.zip
 
 RUN curl -fSL "$REVIVE_URL" -o revive.zip \
  && unzip -q revive.zip \
  && mv revive-adserver-${REVIVE_VERSION}/* . \
  && rm -rf revive.zip revive-adserver-${REVIVE_VERSION}
-
-# Instala as dependências PHP do projeto (gera lib/vendor)
-ENV COMPOSER_ALLOW_SUPERUSER=1
-RUN composer install --no-dev --no-interaction --prefer-dist --no-progress
 
 # Força detecção de HTTPS e define constantes necessárias
 RUN echo "<?php" > /var/www/html/init.php \
