@@ -29,7 +29,7 @@ RUN printf "ServerName localhost\n\
 
 # Instala PEAR e bibliotecas HTML necessárias
 RUN curl -sS https://pear.php.net/go-pear.phar -o go-pear.phar \
- && php go-pear.phar <<EOF \n\n\n\n\n\n\n\n\n\n\nEOF \
+ && php go-pear.phar -d php_dir=/usr/local/lib/php -d data_dir=/usr/local/lib/php/data -d test_dir=/usr/local/lib/php/tests -d doc_dir=/usr/local/lib/php/docs \
  && rm go-pear.phar \
  && pear channel-update pear.php.net \
  && pear install --alldeps HTML_Common \
