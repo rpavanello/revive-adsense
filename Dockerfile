@@ -29,7 +29,7 @@ RUN printf "ServerName localhost\n\
 
 WORKDIR /var/www/html
 
-# Baixa o pacote de release oficial - versão 5.5.2 (mais recente e estável)
+# Baixa o pacote de release oficial - versão 5.5.2
 ARG REVIVE_VERSION=5.5.2
 ARG REVIVE_URL=https://download.revive-adserver.com/revive-adserver-${REVIVE_VERSION}.tar.gz
 
@@ -44,6 +44,10 @@ RUN echo "<?php" > /var/www/html/init.php \
  && echo "    \$_SERVER['HTTPS'] = 'on';" >> /var/www/html/init.php \
  && echo "    \$_SERVER['SERVER_PORT'] = 443;" >> /var/www/html/init.php \
  && echo "}" >> /var/www/html/init.php \
+ && echo "define('MAX_PATH', dirname(__FILE__));" >> /var/www/html/init.php \
+ && echo "define('LIB_PATH', MAX_PATH . '/lib');" >> /var/www/html/init.php \
+ && echo "define('RV_PATH', MAX_PATH);" >> /var/www/html/init.php \
+ && echo "define('OX_PATH', MAX_PATH);" >> /var/www/html/init.php \
  && echo "?>" >> /var/www/html/init.php
 
 # Configura PHP para carregar init.php antes de qualquer script
