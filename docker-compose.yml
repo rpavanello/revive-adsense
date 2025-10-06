@@ -9,9 +9,9 @@ services:
     volumes:
       - db_data:/var/lib/mysql
     restart: unless-stopped
-
+    
   revive:
-    build: .
+    image: codions/revive-adserver:latest
     depends_on:
       - db
     environment:
@@ -24,12 +24,7 @@ services:
       - revive_plugins:/var/www/html/plugins
       - revive_uploads:/var/www/html/www/images
     restart: unless-stopped
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost/"]
-      interval: 15s
-      timeout: 5s
-      retries: 10
-
+    
   phpmyadmin:
     image: phpmyadmin:5-apache
     environment:
