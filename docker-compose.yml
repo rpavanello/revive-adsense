@@ -11,7 +11,7 @@ services:
     restart: unless-stopped
     
   revive:
-    image: codions/revive-adserver:latest
+    build: .
     depends_on:
       - db
     environment:
