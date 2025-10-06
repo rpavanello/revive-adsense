@@ -31,7 +31,7 @@ WORKDIR /var/www/html
 
 # Baixa o pacote de release oficial (já contém vendor e PEAR)
 ARG REVIVE_VERSION=5.4.1
-ARG REVIVE_URL=https://github.com/revive-adserver/revive-adserver/releases/download/v${REVIVE_VERSION}/revive-adserver-${REVIVE_VERSION}.zip
+ARG REVIVE_URL=https://download.revive-adserver.com/revive-adserver-${REVIVE_VERSION}.zip
 
 RUN curl -fSL "$REVIVE_URL" -o revive.zip \
  && unzip -q revive.zip \
